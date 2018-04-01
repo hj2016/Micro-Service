@@ -1,0 +1,6 @@
+{
+	"_class" : "com.hj.domain.mongo.MongoUser",
+	"_id" : NumberLong("1"),
+	"name" : "hj",
+	"password" : "123"
+},

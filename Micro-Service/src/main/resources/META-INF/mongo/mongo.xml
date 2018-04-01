@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+    http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
+    http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
+    http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd"
+       default-lazy-init="false">
+
+    <!-- 加载mongodb的属性配置文件 -->
+    <!--<context:property-placeholder location="classpath:mongo.properties" />-->
+
+    <!-- 连接配置 -->
+    <mongo:mongo-client id="mongo" host="${mongo.host}" port="${mongo.port}">
+        <mongo:client-options connections-per-host="${mongo.connections.per.host}"
+                              threads-allowed-to-block-for-connection-multiplier="${mongo.threads.allowed.block.connection.multiplier}"
+                              connect-timeout="${mongo.connect.timeout}" max-wait-time="${mongo.max.wait.time}"
+                              socket-keep-alive="${mongo.socket.keep.alive}" socket-timeout="${mongo.socket.timeout}"/>
+    </mongo:mongo-client>
+
+    <!-- 副本集 -->
+    <!-- <mongo:mongo-client id="replicaSetMongo" replica-set="127.0.0.1:27017,localhost:27018"/> -->
+
+    <mongo:db-factory  id="mongoDbFactory" dbname="testdb" mongo-ref="mongo" />
+
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+    </bean>
+
+    <!-- 自动扫描该包下的repository，自动生成实现了类，根据接口的函数名生成相应的操作  -->
+    <mongo:repositories base-package="com.hj.dao.mongo"/>
+
+
+
+</beans>
